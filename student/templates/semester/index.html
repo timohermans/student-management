@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{semester.name}}
+{% endblock %}
+
+{% block content %}
+    <ul>
+        {% for student in semester.students %}
+        <li><a href="{{url_for('student_show_overview', id=student.id)}}">{{student.name}}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

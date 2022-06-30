@@ -27,7 +27,11 @@ def students_search(query: str):
 
 
 def student_show_overview(id: int):
-    return db_session.query(Student).where(Student.id.is_(id)).one()
+    return db_session.query(Student).where(Student.id == id).one()
+
+
+def semester_show_overview(id: int):
+    return db_session.query(Semester).where(Semester.id == id).one()
 
 
 def canvas_show_available_courses():

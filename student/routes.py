@@ -26,6 +26,10 @@ def student_show_overview(id: int):
     student = usecases.student_show_overview(id)
     return render_template("student/index.html", student=student)
 
+def semester_show_overview(id: int):
+    semester = usecases.semester_show_overview(id)
+    return render_template("semester/index.html", semester=semester)
+
 
 @cache.cached(timeout=86400)  # a day
 def canvas_show_available_courses():
