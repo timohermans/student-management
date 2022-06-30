@@ -1,21 +1,18 @@
 from datetime import datetime, timezone
+from fileinput import filename
 import os
 from typing import List, Tuple
 from flask import (
     abort,
-    redirect,
-    render_template,
-    request,
     send_from_directory,
-    url_for,
     current_app as app,
 )
 import json
+import urllib
 
 from student import canvas_api
 from student.database import db_session
 from student.models import Student, Semester
-from student.cache import cache
 from student.canvas_api import User as CanvasUser
 
 
@@ -76,12 +73,7 @@ def canvas_students_import(id, form):
 
     canvas_id = int(course_id + section_id)
 
-    semester = (
-        db_session.query(Semester)
-        .join(Semester.students)
-        .where(Semester.canvas_id.is_(canvas_id))
-        .first()
-    )
+    semester = db_session.query(Semester).where(Semester.canvas_id == canvas_id).one()
 
     if semester is None:
         semester = Semester(
@@ -104,16 +96,36 @@ def canvas_students_import(id, form):
             (s for s in existing_students if s.canvas_id == int(student._id)), None
         )
 
-        if existing_student is not None:
-            semester.students.append(existing_student)
-        else:
-            new_student = Student(
-                name=student.name, canvas_id=student._id, avatar_url=student.avatarUrl
-            )
-            db_session.add(new_student)
-            semester.students.append(new_student)
+        student_new = None
 
+        if existing_student is not None:
+            student_new = existing_student
+            semester.students.append(student_new)
+        else:
+            file_name = f"{student.name}.jpg" if student.avatarUrl is not None else None
+            student_new = Student(
+                name=student.name, canvas_id=student._id, avatar_url=file_name
+            )
+            db_session.add(student_new)
+            semester.students.append(student_new)
+
+        download_image_of(student_new, student.avatarUrl)
     db_session.commit()
+
+
+def download_image_of(student: Student, avatar_url: str) -> str:
+    if student.avatar_url is None or avatar_url is None:
+        return
+
+    dir = app.config["MEDIA_FOLDER"]
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+    file_name = os.path.join(dir, student.avatar_url)
+
+    if os.path.exists(file_name):
+        return
+
+    urllib.request.urlretrieve(avatar_url, file_name)
 
 
 def get_media_file(filename: str):

@@ -58,5 +58,4 @@ for student in students_of_section:
     if avatar_url is None:
         continue
     print(student_name)
-    continue
     urllib.request.urlretrieve(avatar_url, f"tests/{student_name}.jpg")
