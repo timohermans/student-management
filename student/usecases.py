@@ -1,5 +1,15 @@
 from datetime import datetime, timezone
-from flask import abort, redirect, render_template, request, url_for
+import os
+from typing import List, Tuple
+from flask import (
+    abort,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
+    current_app as app,
+)
 import json
 
 from student import canvas_api
@@ -9,24 +19,20 @@ from student.cache import cache
 from student.canvas_api import User as CanvasUser
 
 
-def user_get_general_overview():
+def user_get_general_overview() -> Tuple[List[Student], List[Semester]]:
     students = db_session.query(Student).all()
     semesters = db_session.query(Semester).all()
-    return render_template("index.html", students=students, semesters=semesters)
+    return students, semesters
 
 
-def students_search():
-    query = request.args.get("query") or ""
-    result = db_session.query(Student).where(Student.name.like(f"%{query}%")).all()
-    return render_template("students/search.html", students=result)
+def students_search(query: str):
+    return db_session.query(Student).where(Student.name.like(f"%{query}%")).all()
 
 
 def student_show_overview(id: int):
-    student = db_session.query(Student).where(Student.id.is_(id)).one()
-    return render_template("student/index.html", student=student)
+    return db_session.query(Student).where(Student.id.is_(id)).one()
 
 
-@cache.cached(timeout=86400)  # a day
 def canvas_show_available_courses():
     courses = canvas_api.get_available_courses()
     courses.sort(
@@ -35,10 +41,9 @@ def canvas_show_available_courses():
         else datetime(1990, 1, 1, tzinfo=timezone.utc),
         reverse=True,
     )
-    return render_template("canvas/courses.html", courses=courses)
+    return courses
 
 
-@cache.cached(timeout=86400)  # a day
 def canvas_course_details(id: str):
     course = canvas_api.get_course_details(id)
 
@@ -55,12 +60,10 @@ def canvas_course_details(id: str):
         section.student_json = json.dumps([s.__dict__ for s in section.students])
 
     course.sections = sections
+    return course
 
-    return render_template("canvas/course.html", course=course)
 
-
-def canvas_students_import(id):
-    form = request.form
+def canvas_students_import(id, form):
     course_id = id
     course_name = form.get("course_name")
     term_name = form.get("course_term_name")
@@ -112,4 +115,6 @@ def canvas_students_import(id):
 
     db_session.commit()
 
-    return redirect(url_for("user_get_general_overview"))
+
+def get_media_file(filename: str):
+    return send_from_directory(app.config["MEDIA_FOLDER"], filename, as_attachment=True)
