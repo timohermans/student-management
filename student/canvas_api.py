@@ -89,39 +89,39 @@ def get_available_courses():
 
 
 def get_course_details(id: str) -> CourseDetail | None:
-    query = """query MyQuery {{
-  course(id: "{}") {{
+    query = """query MyQuery {
+  course(id: "{id}") {
     _id
     name
-    term {{
+    term {
       _id
       name
       startAt
       endAt
-    }}
-    sectionsConnection {{
-      nodes {{
+    }
+    sectionsConnection {
+      nodes {
         _id
         name
-      }}
-    }}
-    enrollmentsConnection {{
-      nodes {{
+      }
+    }
+    enrollmentsConnection {
+      nodes {
         _id
-        user {{
+        user {
           _id
           name
           avatarUrl
-        }}
-        section {{
+        }
+        section {
           _id
           name
-        }}
-      }}
-    }}
-  }}
-}}
-    """.format(id)
+        }
+      }
+    }
+  }
+}
+    """.replace("{id}", id)
     response = get(query)
 
     if response.status_code != 200:
