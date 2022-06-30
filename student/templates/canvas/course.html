@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{course.name}}
+{% endblock %}
+
+{% block content %}
+<h2>{{course.name}}</h2>
+
+<ul>
+    {% for section in course.sections %}
+    <li><a href="#{{section._id}}">{{section.name}}</a></li>
+    {% endfor %}
+</ul>
+
+{% if course.sections %}
+{% for section in course.sections %}
+<section id="{{ section._id }}">
+    <h3>{{section.name}}</h3>
+
+    <form method="post">
+        <input type="hidden" name="course_id" value="{{course._id}}">
+        <input type="hidden" name="course_name" value="{{course.name}}">
+        <input type="hidden" name="course_term_name" value="{{course.term.name}}">
+        <input type="hidden" name="course_term_start_at" value="{{course.term.startAt}}">
+        <input type="hidden" name="course_term_end_at" value="{{course.term.endAt}}">
+        <input type="hidden" name="section_id" value="{{section._id}}">
+        <input type="hidden" name="section_name" value="{{section.name}}">
+        <input type="hidden" name="students" value="{{section.student_json}}">
+        <input type="submit" value="Start managing" />
+    </form>
+
+    <table>
+        <tbody>
+            {% for student in section.students %}
+            <tr>
+                <td>
+                    {% if student.avatarUrl %}
+                    <img src="{{student.avatarUrl}}" alt="{{student.name}} avatar" width="128" height="128">
+                    {% endif %}
+                </td>
+                <td>{{student.name}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+</section>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

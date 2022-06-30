@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Search student{% endblock %}
+
+{% block content %}
+
+<h2>Results</h2>
+
+{% if students|length == 0 %}
+<p>No results found</p>
+{% else %}
+<ul>
+    {% for student in students %}
+    <li><a href="{{ url_for('student_show_overview', id=student.id) }}">{{student.name}}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

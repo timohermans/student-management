@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}
+Available courses on Canvas
+{% endblock %}
+
+{% block content %}
+<table>
+    <tbody>
+        {% for course in courses %}
+        <tr>
+            <td>{{course._id}}</td>
+            <td><a href="{{ url_for('canvas_course_details', id=course._id)}}">{{course.name}}</a></td>
+            <td>{{course.term.name}}</td>
+            <td>{{course.term.startAt}}</td>
+            <td>{{course.term.endAt}}</td>
+        </tr>
+        {% else %}
+        <p>There are no courses available on Canvas. Did this app break? Are you fired 😱?</p>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,25 @@
+query MyQuery {
+  course(id: "12424") {
+    name
+    sectionsConnection {
+      nodes {
+        id
+        name
+        userCount
+      }
+    }
+    enrollmentsConnection {
+      nodes {
+        id
+        user {
+          name
+          avatarUrl
+        }
+        section {
+          name
+          id
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="cluster spaced">
+    <section>
+        <h2>Students</h2>
+        <form method="get" action="search">
+            <p>
+                <label for="search">Student search</label><br />
+                <input id="search" name="query" type="text" placeholder="search.." />
+            </p>
+        </form>
+    </section>
+
+    <section>
+        <h2>Semesters</h2>
+        <ul>
+            {% for semester in semesters %}
+            <li>{{semester.name}} - {{semester.term}}</li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+
+{% endblock %}

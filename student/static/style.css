@@ -1,0 +1,18 @@
+:root {
+    --space: 1rem;
+}
+
+form input[type="text"] {
+    width: 100%;
+}
+
+.cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space, 1rem);
+    justify-content: flex-start;
+}
+
+.cluster.spaced {
+    justify-content: space-between;
+}
