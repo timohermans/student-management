@@ -35,7 +35,6 @@ r = requests.post(
     headers={"Authorization": token},
 )
 
-print(r.text)
 data = json.load(open("result.json").readlines())
 
 section = "CB-S01"
@@ -57,5 +56,4 @@ for student in students_of_section:
     avatar_url = student["user"]["avatarUrl"]
     if avatar_url is None:
         continue
-    print(student_name)
     urllib.request.urlretrieve(avatar_url, f"tests/{student_name}.jpg")

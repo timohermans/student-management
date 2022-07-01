@@ -32,7 +32,6 @@ def student_show_overview(id: int):
 
 def student_add_note(id: int, text: str, file):
     student = db_session.query(Student).where(Student.id == id).one()
-    print("HELLO ALL")
     file_path = None
 
     if file is not None:
