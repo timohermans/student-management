@@ -38,7 +38,10 @@ def student_add_note(id: int, text: str, file):
 
     if file is not None:
         file_name = secure_filename(file.filename)
-        file_path = os.path.join(app.config['MEDIA_FOLDER'], student.name, file_name)
+        dir = os.path.join(app.config['MEDIA_FOLDER'], student.name)
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        file_path = os.path.join(dir, file_name)
         file.save(file_path)
 
     note = Note(text=text, attachment=file_path)
