@@ -1,8 +1,10 @@
+from os import environ
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine('sqlite:///test.db', echo=True, future=True)
+connection_string = environ.get('DATABASE')
+engine = create_engine(connection_string, echo=True, future=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
 Base = declarative_base()
