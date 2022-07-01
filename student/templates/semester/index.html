@@ -6,7 +6,7 @@
 
 {% block content %}
     <ul>
-        {% for student in semester.students %}
+        {% for student in semester.students|sort(attribute='name') %}
         <li><a href="{{url_for('student_show_overview', id=student.id)}}">{{student.name}}</a></li>
         {% endfor %}
     </ul>
