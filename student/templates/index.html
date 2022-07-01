@@ -18,7 +18,7 @@
         <h2>Semesters</h2>
         <ul>
             {% for semester in semesters %}
-            <li><a href="{{url_for('semester_show_overview', id=semester.id)}}">{{semester.name}} - {{semester.term}}</a></li>
+            <li><a href="{{url_for('semester_show_overview', id=semester.id)}}">{{semester.name}} - {{semester.section}} - {{semester.term}}</a></li>
             {% endfor %}
         </ul>
     </section>
