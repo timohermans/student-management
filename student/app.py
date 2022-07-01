@@ -9,7 +9,8 @@ from .database import db_session
 app = Flask(__name__)
 app.config.from_mapping(
     MEDIA_FOLDER=os.path.join(app.instance_path, "media"),
-    DATABASE=os.environ.get("DATABASE")
+    DATABASE=os.environ.get("DATABASE"),
+    CANVAS_API_TOKEN=os.environ.get("CANVAS_API_TOKEN")
 )
 cache.init_app(app)
 app.register_blueprint(errors.blueprint)

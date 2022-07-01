@@ -1,5 +1,6 @@
 import requests
 import json
+from flask import current_app as app
 from datetime import datetime
 
 
@@ -49,7 +50,8 @@ class CourseDetail:
 
 def get(query: str) -> requests.Response:
     api_url = "https://fhict.test.instructure.com/api/graphql"
-    token = "Bearer cwFQicKHBN3DQ7U7lecrz3R2rV3TVeOv4wYjAsGnXKhy308FpSqhezxO5qWaOAYY"
+    token = f"Bearer {app.config['CANVAS_API_TOKEN']}"
+
     r = requests.post(
         api_url,
         json={"operationName": "MyQuery", "query": query, "variables": None},
@@ -77,13 +79,14 @@ def get_available_courses():
     courses = []
 
     if response.status_code == 200:
-
         data = json.loads(response.text)
 
         for course_json in data["data"]["allCourses"]:
             course = Course(**course_json)
             if course not in courses:
                 courses.append(course)
+    else:
+      print(f"canvas API call failed with {response.status_code}")
 
     return courses
 
@@ -121,7 +124,9 @@ def get_course_details(id: str) -> CourseDetail | None:
     }
   }
 }
-    """.replace("{id}", id)
+    """.replace(
+        "{id}", id
+    )
     response = get(query)
 
     if response.status_code != 200:
