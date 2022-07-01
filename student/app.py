@@ -20,7 +20,11 @@ app.add_url_rule("/student/<int:id>", view_func=routes.student_show_overview)
 app.add_url_rule("/semester/<int:id>", view_func=routes.semester_show_overview)
 app.add_url_rule("/canvas", view_func=routes.canvas_show_available_courses)
 app.add_url_rule("/canvas/course/<string:id>", view_func=routes.canvas_course_details)
-app.add_url_rule("/canvas/course/<string:id>", methods=["POST"], view_func=routes.canvas_students_import)
+app.add_url_rule(
+    "/canvas/course/<string:id>",
+    methods=["POST"],
+    view_func=routes.canvas_students_import,
+)
 app.add_url_rule("/media/<path:filename>", view_func=routes.get_media_file)
 
 
