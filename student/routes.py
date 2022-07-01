@@ -31,6 +31,16 @@ def semester_show_overview(id: int):
     return render_template("semester/index.html", semester=semester)
 
 
+def student_add_note(id: int):
+    file_key = 'attachment'
+    file = None
+    if file_key in request.files and request.files[file_key].filename != '':
+        file = request.files[file_key]
+    text = request.form.get('text')
+    usecases.student_add_note(id, text, file)
+    return redirect(url_for('student_show_overview', id=id))
+
+
 @cache.cached(timeout=86400)  # a day
 def canvas_show_available_courses():
     courses = usecases.canvas_show_available_courses()
@@ -44,6 +54,7 @@ def canvas_course_details(id: str):
 
 
 def canvas_students_import(id):
+    # TODO: don't pass form
     usecases.canvas_students_import(id, request.form)
     return redirect(url_for("user_get_general_overview"))
 

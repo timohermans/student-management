@@ -7,12 +7,13 @@ from flask import (
     send_from_directory,
     current_app as app,
 )
+from werkzeug.utils import secure_filename
 import json
 import urllib
 
 from student import canvas_api
 from student.database import db_session
-from student.models import Student, Semester
+from student.models import Note, Student, Semester
 from student.canvas_api import User as CanvasUser
 
 
@@ -28,6 +29,22 @@ def students_search(query: str):
 
 def student_show_overview(id: int):
     return db_session.query(Student).where(Student.id == id).one()
+
+
+def student_add_note(id: int, text: str, file):
+    student = db_session.query(Student).where(Student.id == id).one()
+    print("HELLO ALL")
+    file_path = None
+
+    if file is not None:
+        file_name = secure_filename(file.filename)
+        file_path = os.path.join(app.config['MEDIA_FOLDER'], student.name, file_name)
+        file.save(file_path)
+
+    note = Note(text=text, attachment=file_path)
+    student.notes.append(note)
+
+    db_session.commit()
 
 
 def semester_show_overview(id: int):
@@ -77,7 +94,7 @@ def canvas_students_import(id, form):
 
     canvas_id = int(course_id + section_id)
 
-    semester = db_session.query(Semester).where(Semester.canvas_id == canvas_id).one()
+    semester = db_session.query(Semester).where(Semester.canvas_id == canvas_id).first()
 
     if semester is None:
         semester = Semester(
