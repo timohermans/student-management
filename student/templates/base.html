@@ -3,20 +3,23 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 {% block head %}{% endblock %}
-<header>
-    <nav>
-        <a href="{{url_for('user_get_general_overview')}}">Home</a>
-        <a href="{{url_for('canvas_show_available_courses')}}">Canvas courses</a>
-    </nav>
-    {% block header %}
-    <h1>Students</h1>
-    {% endblock %}
-</header>
-<main>
-    {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-    {% endfor %}
-    {% block content %}{% endblock %}
-</main>
 
-{% block script %}{% endblock %}
+<body>
+    <header>
+        <nav>
+            <a href="{{url_for('user_get_general_overview')}}">Home</a>
+            <a href="{{url_for('canvas_show_available_courses')}}">Canvas courses</a>
+        </nav>
+        {% block header %}
+        <h1>Students</h1>
+        {% endblock %}
+    </header>
+    <main>
+        {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block script %}{% endblock %}
+</body>

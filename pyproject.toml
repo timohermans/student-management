@@ -10,6 +10,7 @@ Flask = "^2.1.2"
 SQLAlchemy = "^1.4.39"
 Flask-Caching = "^2.0.0"
 python-dotenv = "^0.20.0"
+Flask-DebugToolbar = "^0.13.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
