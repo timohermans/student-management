@@ -10,27 +10,27 @@ import json
 import urllib
 
 from . import canvas_api
-from .database import db_session
+from .database import db
 from .models import Note, Student, Semester
 from .canvas_api import User as CanvasUser
 
 
 def user_get_general_overview() -> Tuple[List[Student], List[Semester]]:
-    students = db_session.query(Student).all()
-    semesters = db_session.query(Semester).all()
+    students = db.session.query(Student).all()
+    semesters = db.session.query(Semester).all()
     return students, semesters
 
 
 def students_search(query: str):
-    return db_session.query(Student).where(Student.name.like(f"%{query}%")).all()
+    return db.session.query(Student).where(Student.name.like(f"%{query}%")).all()
 
 
 def student_show_overview(id: int):
-    return db_session.query(Student).where(Student.id == id).one()
+    return db.session.query(Student).where(Student.id == id).one()
 
 
 def student_add_note(id: int, text: str, file):
-    student = db_session.query(Student).where(Student.id == id).one()
+    student = db.session.query(Student).where(Student.id == id).one()
     file_name = None
 
     if file is not None:
@@ -45,11 +45,11 @@ def student_add_note(id: int, text: str, file):
     note = Note(text=text, attachment=f'{student_dir}/{file_name}')
     student.notes.append(note)
 
-    db_session.commit()
+    db.session.commit()
 
 
 def semester_show_overview(id: int):
-    return db_session.query(Semester).where(Semester.id == id).one()
+    return db.session.query(Semester).where(Semester.id == id).one()
 
 
 def canvas_show_available_courses():
@@ -95,7 +95,7 @@ def canvas_students_import(id, form):
 
     canvas_id = int(course_id + section_id)
 
-    semester = db_session.query(Semester).where(Semester.canvas_id == canvas_id).first()
+    semester = db.session.query(Semester).where(Semester.canvas_id == canvas_id).first()
 
     if semester is None:
         semester = Semester(
@@ -106,11 +106,11 @@ def canvas_students_import(id, form):
             end_at=datetime.fromisoformat(term_end_at),
             canvas_id=canvas_id,
         )
-        db_session.add(semester)
+        db.session.add(semester)
 
     student_ids = [s._id for s in students]
     existing_students = (
-        db_session.query(Student).where(Student.canvas_id.in_(student_ids)).all()
+        db.session.query(Student).where(Student.canvas_id.in_(student_ids)).all()
     )
 
     for student in students:
@@ -128,11 +128,11 @@ def canvas_students_import(id, form):
             student_new = Student(
                 name=student.name, canvas_id=student._id, avatar_url=file_name
             )
-            db_session.add(student_new)
+            db.session.add(student_new)
             semester.students.append(student_new)
 
         download_image_of(student_new, student.avatarUrl)
-    db_session.commit()
+    db.session.commit()
 
 
 def download_image_of(student: Student, avatar_url: str) -> str:

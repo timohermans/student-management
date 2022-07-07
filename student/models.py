@@ -1,25 +1,23 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Table, Text
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship, backref
-from .database import Base
+from .database import db
 from datetime import datetime
 
-semester_students = Table(
+semester_students = db.Table(
     "semester_students",
-    Base.metadata,
     Column("student_id", ForeignKey("student.id")),
     Column("semester_id", ForeignKey("semester.id")),
 )
 
 
-note_involved = Table(
+note_involved = db.Table(
     "note_involved",
-    Base.metadata,
     Column("student_id", ForeignKey("student.id"), nullable=True),
     Column("note_id", ForeignKey("note.id"))
 )
 
 
-class Student(Base):
+class Student(db.Model):
     __tablename__ = "student"
 
     id = Column(Integer, primary_key=True)
@@ -36,7 +34,7 @@ class Student(Base):
     )
 
 
-class Note(Base):
+class Note(db.Model):
     __tablename__ = "note"
 
     id = Column(Integer, primary_key=True)
@@ -45,7 +43,7 @@ class Note(Base):
     date_created = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
-class Semester(Base):
+class Semester(db.Model):
     __tablename__ = "semester"
 
     id = Column(Integer, primary_key=True)

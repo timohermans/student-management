@@ -4,18 +4,25 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from . import routes, errors, filters
 from .cache import cache
-from .database import db_session
+from .database import db
 
 
 app = Flask(__name__)
 app.config.from_mapping(
     MEDIA_FOLDER=os.path.join(app.instance_path, "media"),
-    DATABASE=os.environ.get("DATABASE"),
     CANVAS_API_TOKEN=os.environ.get("CANVAS_API_TOKEN"),
-    SECRET_KEY= os.environ.get("SECRET_KEY")
+    SECRET_KEY= os.environ.get("SECRET_KEY"),
+    SQLALCHEMY_DATABASE_URI=os.environ.get("SQLALCHEMY_DATABASE_URI"),
+    SQLALCHEMY_TRACK_MODIFICATIONS=False
 )
+# debug tools
 toolbar = DebugToolbarExtension(app)
+
+# storage
+db.init_app(app)
 cache.init_app(app)
+
+# logic
 app.register_blueprint(errors.blueprint)
 app.register_blueprint(filters.blueprint)
 
@@ -32,8 +39,3 @@ app.add_url_rule(
     view_func=routes.canvas_students_import,
 )
 app.add_url_rule("/media/<path:filename>", view_func=routes.get_media_file)
-
-
-@app.teardown_appcontext
-def shutdown_session(exception=None):
-    db_session.remove()

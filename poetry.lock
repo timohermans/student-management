@@ -100,6 +100,18 @@ itsdangerous = "*"
 werkzeug = "*"
 
 [[package]]
+name = "flask-sqlalchemy"
+version = "2.5.1"
+description = "Adds SQLAlchemy support to your Flask application."
+category = "main"
+optional = false
+python-versions = ">= 2.7, != 3.0.*, != 3.1.*, != 3.2.*, != 3.3.*"
+
+[package.dependencies]
+Flask = ">=0.10"
+SQLAlchemy = ">=0.8.0"
+
+[[package]]
 name = "greenlet"
 version = "1.1.2"
 description = "Lightweight in-process concurrent programming"
@@ -276,7 +288,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "adf4626042269e5ed8f24911ddbb829eb1d43e3baf7b962fd120b4d67c41a908"
+content-hash = "bb978c9987967e0ce0a9f32d6fa04c8dc96f3b1ecfd6731d0af36889ae264247"
 
 [metadata.files]
 atomicwrites = [
@@ -313,6 +325,10 @@ flask-caching = [
 flask-debugtoolbar = [
     {file = "Flask-DebugToolbar-0.13.1.tar.gz", hash = "sha256:0c26aa013a9813b8886857bf0ec24d28ab494114a264baf06c951cadc4dd0dae"},
     {file = "Flask_DebugToolbar-0.13.1-py3-none-any.whl", hash = "sha256:491c737f321830c06a2835784acf1fc8488fd257a0ef318810b3b6bed5f600d5"},
+]
+flask-sqlalchemy = [
+    {file = "Flask-SQLAlchemy-2.5.1.tar.gz", hash = "sha256:2bda44b43e7cacb15d4e05ff3cc1f8bc97936cc464623424102bfc2c35e95912"},
+    {file = "Flask_SQLAlchemy-2.5.1-py2.py3-none-any.whl", hash = "sha256:f12c3d4cc5cc7fdcc148b9527ea05671718c3ea45d50c7e732cceb33f574b390"},
 ]
 greenlet = [
     {file = "greenlet-1.1.2-cp27-cp27m-macosx_10_14_x86_64.whl", hash = "sha256:58df5c2a0e293bf665a51f8a100d3e9956febfbf1d9aaf8c0677cf70218910c6"},
