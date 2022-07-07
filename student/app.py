@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 
-from student import routes, errors
+from . import routes, errors, filters
 from .cache import cache
 from .database import db_session
 
@@ -17,6 +17,7 @@ app.config.from_mapping(
 toolbar = DebugToolbarExtension(app)
 cache.init_app(app)
 app.register_blueprint(errors.blueprint)
+app.register_blueprint(filters.blueprint)
 
 app.add_url_rule("/", methods=["GET"], view_func=routes.user_get_general_overview)
 app.add_url_rule("/search", view_func=routes.students_search)

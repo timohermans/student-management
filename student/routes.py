@@ -36,6 +36,7 @@ def student_add_note(id: int):
     file = None
     if file_key in request.files and request.files[file_key].filename != '':
         file = request.files[file_key]
+    # TODO: when calling from an API, this is NOT safe. We should escape it then
     text = request.form.get('text')
     usecases.student_add_note(id, text, file)
     return redirect(url_for('student_show_overview', id=id))
@@ -60,4 +61,8 @@ def canvas_students_import(id):
 
 
 def get_media_file(filename: str):
+    import os
+    print(filename)
+    print(os.path.join(app.config["MEDIA_FOLDER"], filename))
+    print(os.path.exists(os.path.join(app.config["MEDIA_FOLDER"], filename)))
     return send_from_directory(app.config["MEDIA_FOLDER"], filename, as_attachment=True)

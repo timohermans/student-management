@@ -3,17 +3,16 @@ import os
 from typing import List, Tuple
 from flask import (
     abort,
-    send_from_directory,
     current_app as app,
 )
 from werkzeug.utils import secure_filename
 import json
 import urllib
 
-from student import canvas_api
-from student.database import db_session
-from student.models import Note, Student, Semester
-from student.canvas_api import User as CanvasUser
+from . import canvas_api
+from .database import db_session
+from .models import Note, Student, Semester
+from .canvas_api import User as CanvasUser
 
 
 def user_get_general_overview() -> Tuple[List[Student], List[Semester]]:
@@ -32,17 +31,18 @@ def student_show_overview(id: int):
 
 def student_add_note(id: int, text: str, file):
     student = db_session.query(Student).where(Student.id == id).one()
-    file_path = None
+    file_name = None
 
     if file is not None:
         file_name = secure_filename(file.filename)
-        dir = os.path.join(app.config['MEDIA_FOLDER'], student.name)
+        student_dir = secure_filename(f"{student.id}_{student.name}")
+        dir = os.path.join(app.config['MEDIA_FOLDER'], student_dir)
         if not os.path.exists(dir):
             os.makedirs(dir)
         file_path = os.path.join(dir, file_name)
         file.save(file_path)
 
-    note = Note(text=text, attachment=file_path)
+    note = Note(text=text, attachment=f'{student_dir}/{file_name}')
     student.notes.append(note)
 
     db_session.commit()
@@ -148,7 +148,3 @@ def download_image_of(student: Student, avatar_url: str) -> str:
         return
 
     urllib.request.urlretrieve(avatar_url, file_name)
-
-
-def get_media_file(filename: str):
-    return send_from_directory(app.config["MEDIA_FOLDER"], filename, as_attachment=True)

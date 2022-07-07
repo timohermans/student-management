@@ -28,6 +28,14 @@
         right: 10px;
         bottom: 10px;
     }
+
+    #notes h1 {
+        font-size: 1.5rem;
+    }
+
+    #notes h2 {
+        font-size: 1.25rem;
+    }
 </style>
 {% endblock %}
 
@@ -72,10 +80,16 @@
 
 <section id="notes">
     <h2>Notes</h2>
-    {% for note in student.notes %}
+    {% for note in student.notes|sort(attribute='date_created', reverse=True) %}
     <article>
+        {{note.date_created|datetimeformat('%a %Y-%m-%d %H:%M')}}
         {{note.text|safe}}
+        {% if note.attachment %}
+        <a href="{{url_for('get_media_file', filename=note.attachment)}}" target="_blank">{{note.attachment}}</a>
+        {% endif %}
     </article>
+    {% else %}
+    <p>There are no notes yet</p>
     {% endfor %}
 </section>
 
