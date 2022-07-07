@@ -7,8 +7,8 @@ from flask import (
     current_app as app,
 )
 
-from student import usecases
-from student.cache import cache
+from . import usecases
+from .cache import cache
 
 
 def user_get_general_overview():
