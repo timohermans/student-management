@@ -61,8 +61,4 @@ def canvas_students_import(id):
 
 
 def get_media_file(filename: str):
-    import os
-    print(filename)
-    print(os.path.join(app.config["MEDIA_FOLDER"], filename))
-    print(os.path.exists(os.path.join(app.config["MEDIA_FOLDER"], filename)))
     return send_from_directory(app.config["MEDIA_FOLDER"], filename, as_attachment=True)
