@@ -16,11 +16,15 @@
 
     <section>
         <h2>Semesters</h2>
+        {% if semesters %}
         <ul>
             {% for semester in semesters %}
             <li><a href="{{url_for('semester_show_overview', id=semester.id)}}">{{semester.name}} - {{semester.section}} - {{semester.term}}</a></li>
             {% endfor %}
         </ul>
+        {% else %}
+        <p>No semesters managed yet</p>
+        {% endif %}
     </section>
 </div>
 
