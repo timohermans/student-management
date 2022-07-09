@@ -1,7 +1,8 @@
-import requests
 import json
-from flask import current_app as app
 from datetime import datetime
+
+import requests
+from flask import current_app as app
 
 
 class Course:
@@ -49,7 +50,7 @@ class CourseDetail:
 
 
 def get(query: str) -> requests.Response:
-    api_url = "https://fhict.test.instructure.com/api/graphql"
+    api_url = app.config["CANVAS_API_URL"]
     token = f"Bearer {app.config['CANVAS_API_TOKEN']}"
 
     r = requests.post(
