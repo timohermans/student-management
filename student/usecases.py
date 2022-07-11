@@ -8,11 +8,12 @@ from flask import (
 from werkzeug.utils import secure_filename
 import json
 import urllib
+from sqlalchemy.orm import joinedload
 
 from . import canvas_api
 from .database import db
 from .models import Note, Student, Semester
-from .canvas_api import User as CanvasUser
+from .canvas_api import Section, User as CanvasUser
 
 
 def user_get_general_overview() -> Tuple[List[Student], List[Semester]]:
@@ -69,7 +70,7 @@ def canvas_course_details(id: str):
     if course is None:
         abort(404)
 
-    sections = course.sections
+    sections: List[Section] = course.sections
 
     for section in sections:
         section.students = []

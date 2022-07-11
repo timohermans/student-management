@@ -24,6 +24,7 @@ class Section:
     def __init__(self, _id, name):
         self._id = _id
         self.name = name
+        self.students = []
 
 
 class Enrollment:
@@ -87,7 +88,7 @@ def get_available_courses():
             if course not in courses:
                 courses.append(course)
     else:
-      print(f"canvas API call failed with {response.status_code}")
+        print(f"canvas API call failed with {response.status_code}")
 
     return courses
 

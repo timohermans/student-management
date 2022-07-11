@@ -1,11 +1,10 @@
 from datetime import datetime
 
-import pytest
 from student.database import db
 from student.models import Semester
 
 
-def test_shows_no_initial_semesters(client, app):
+def test_show_message_when_there_are_no_semesters_added_yet(client, app):
     response = client.get("/")
 
     assert response.status_code == 200
@@ -13,7 +12,7 @@ def test_shows_no_initial_semesters(client, app):
     assert b"No semesters managed yet" in response.data
 
 
-def test_shows_semesters_in_db(client, app):
+def test_shows_semesters_with_a_link(client, app):
     semester = Semester(
         name="INTERN5-CMK",
         section="Ass1 T. Hermans",

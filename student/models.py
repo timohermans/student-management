@@ -13,7 +13,7 @@ semester_students = db.Table(
 note_involved = db.Table(
     "note_involved",
     Column("student_id", ForeignKey("student.id"), nullable=True),
-    Column("note_id", ForeignKey("note.id"))
+    Column("note_id", ForeignKey("note.id")),
 )
 
 
