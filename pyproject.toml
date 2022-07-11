@@ -29,3 +29,6 @@ testpaths = ["tests"]
 [tool.coverage.run]
 branch = true
 source = ["student"]
+
+[tool.pyright]
+venv="student-V9KJ2EKL-py3.10"
