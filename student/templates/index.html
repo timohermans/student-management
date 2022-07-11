@@ -1,31 +1,31 @@
 {% extends "base.html" %}
-
 {% block title %}Home{% endblock %}
-
 {% block content %}
-<div class="cluster spaced">
-    <section>
-        <h2>Students</h2>
-        <form method="get" action="search">
-            <p>
-                <label for="search">Student search</label><br />
-                <input id="search" name="query" type="text" placeholder="search.." />
-            </p>
-        </form>
-    </section>
-
-    <section>
-        <h2>Semesters</h2>
-        {% if semesters %}
-        <ul>
-            {% for semester in semesters %}
-            <li><a href="{{url_for('semester_show_overview', id=semester.id)}}">{{semester.name}} - {{semester.section}} - {{semester.term}}</a></li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p>No semesters managed yet</p>
-        {% endif %}
-    </section>
-</div>
-
+    <div class="cluster spaced">
+        <section>
+            <h2>Students</h2>
+            <form method="get" action="search">
+                <p>
+                    <label for="search">Student search</label>
+                    <br />
+                    <input id="search" name="query" type="text" placeholder="search.." />
+                </p>
+            </form>
+        </section>
+        <section>
+            <h2>Semesters</h2>
+            {% if semesters %}
+                <ul>
+                    {% for semester in semesters %}
+                        <li>
+                            <a href="{{ url_for('semester_show_overview', id=semester.id)}}">{{ semester.name }} - {{ semester.section }} - {{ semester.term }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No semesters managed yet</p>
+            {% endif %}
+        </section>
+    </div>
 {% endblock %}
+

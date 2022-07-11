@@ -33,6 +33,10 @@ class Student(db.Model):
         backref=backref("notes", lazy=True),
     )
 
+    semesters = relationship(
+        "Semester", secondary=semester_students, lazy="subquery", viewonly=True
+    )
+
 
 class Note(db.Model):
     __tablename__ = "note"

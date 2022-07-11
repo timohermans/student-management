@@ -1,13 +1,33 @@
 {% extends 'base.html' %}
-
-{% block title %}
-    {{semester.name}}
-{% endblock %}
-
+{% block title %}{{ semester.name }}{% endblock %}
+{% block header %}<h1>{{ semester.name }}</h1>{% endblock %}
 {% block content %}
+    <p>TODO: create a filter that fills the notes with empty blanks for dates of other students' notes</p>
+    <table>
+        <tbody>
+            {% for student in semester.students|sort(attribute='name') %}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    {% for note in student.notes %}<td>{{ note.text|safe }}</td>{% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     <ul>
         {% for student in semester.students|sort(attribute='name') %}
-        <li><a href="{{url_for('student_show_overview', id=student.id)}}">{{student.name}}</a></li>
+            <li>
+                <div>
+                    <a href="{{ url_for('student_show_overview', id=student.id)}}">{{ student.name }}</a>
+                    <ul>
+                        {% for note in student.notes %}
+                            <li>
+                                <p>{{ note.date_created }}</p>
+                                <p>{{ note.text|safe }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </li>
         {% endfor %}
     </ul>
 {% endblock %}

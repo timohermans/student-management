@@ -37,20 +37,29 @@ def student_add_note(id: int, text: str, file):
     if file is not None:
         file_name = secure_filename(file.filename)
         student_dir = secure_filename(f"{student.id}_{student.name}")
-        dir = os.path.join(app.config['MEDIA_FOLDER'], student_dir)
+        dir = os.path.join(app.config["MEDIA_FOLDER"], student_dir)
         if not os.path.exists(dir):
             os.makedirs(dir)
         file_path = os.path.join(dir, file_name)
         file.save(file_path)
 
-    note = Note(text=text, attachment=f'{student_dir}/{file_name}')
+    note = Note(text=text, attachment=f"{student_dir}/{file_name}")
     student.notes.append(note)
 
     db.session.commit()
 
 
 def semester_show_overview(id: int):
-    return db.session.query(Semester).where(Semester.id == id).one()
+    s = Semester.query.options(
+        joinedload(Semester.students, innerjoin=True).joinedload(
+            Student.notes.and_(
+                Note.date_created >= Semester.start_at,
+                Note.date_created <= Semester.end_at,
+            ),
+            innerjoin=True,
+        )
+    ).first()
+    return s
 
 
 def canvas_show_available_courses():
