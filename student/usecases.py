@@ -50,13 +50,13 @@ def student_add_note(id: int, text: str, file):
 
 
 def semester_show_overview(id: int):
+    semester = Semester.query.filter(Semester.id == id).one()
     s = Semester.query.options(
-        joinedload(Semester.students, innerjoin=True).joinedload(
+        joinedload(Semester.students).joinedload(
             Student.notes.and_(
-                Note.date_created >= Semester.start_at,
-                Note.date_created <= Semester.end_at,
-            ),
-            innerjoin=True,
+                Note.date_created >= semester.start_at,
+                Note.date_created <= semester.end_at,
+            )
         )
     ).first()
     return s

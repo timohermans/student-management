@@ -4,6 +4,15 @@
 {% block content %}
     <p>TODO: create a filter that fills the notes with empty blanks for dates of other students' notes</p>
     <table>
+	    <thead>
+		    <tr>
+			    <th>Name</th>
+			    {% for d in semester.students|all_students_notes_dates|sort %}
+			    <th>{{d}}</th>
+			    {% endfor %}
+		    </tr>
+	    </thead>
+	    
         <tbody>
             {% for student in semester.students|sort(attribute='name') %}
                 <tr>
